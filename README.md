@@ -8,11 +8,11 @@ Installation
 
 To get the package, execute:
 
-  go get https://github.com/vezril/go-cookiejar
+  go get github.com/vezril/go-cookiejar
 
 To import this package, add the following line to your code:
 
-  import "https://github.com/vezril/go-cookiejar"
+  import "github.com/vezril/go-cookiejar"
 
   Contents
 ------------
