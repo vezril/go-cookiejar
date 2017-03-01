@@ -1,7 +1,7 @@
 CookieJar - A contestant's toolbox
 ======================================
 
-CookieJar is a small collection of common algorithms, data structures and library extensions that were deemed handy for computing competitions at one point or another. It is a personal and modified version based entirely on https://raw.githubusercontent.com/karalabe/cookiejar/. :)
+CookieJar is a small collection of common algorithms, data structures and library extensions that were deemed handy for computing competitions at one point or another. It is a personal and modified version based entirely on https://github.com/karalabe/cookiejar/. :)
 
 Installation
 ----------------

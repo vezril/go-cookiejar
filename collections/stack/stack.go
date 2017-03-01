@@ -15,6 +15,7 @@ package stack
 
 import (
     "sync"
+    "fmt"
 )
 
 // The size of a block of data
@@ -25,7 +26,7 @@ type Stack struct {
     size        int
     capacity    int
     offset      int
-    lock        sync.mutex
+    lock        sync.Mutex
 
     blocks [][]interface{}
     active []interface{}
@@ -39,6 +40,18 @@ func New() *Stack {
     result.capacity = blockSize
     result.lock = sync.Mutex{}
     return result
+}
+
+func (s *Stack) Lock() {
+    s.lock.Lock()
+}
+
+func (s *Stack) Unlock() {
+    s.lock.Unlock()
+}
+
+func (s *Stack) LockStatus() {
+    fmt.Println(s.lock)
 }
 
 // Pushes a value onto the stack, expanding it if necessary.
