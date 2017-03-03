@@ -54,41 +54,68 @@ func (t *Tape) Left() {
 
 // Doesn't validate bounds yet
 func (t *Tape) Sync(index uint) {
+  t.lock.Lock()
+  defer t.lock.Unlock()
+
   t.index = index
 }
 
 func (t *Tape) SyncToOpening() {
+  t.lock.Lock()
+
   for t.Read() != 91 {
     t.Left()
   }
+  t.lock.Unlock()
 }
 
 func (t *Tape) SyncToClosing() {
+  t.lock.Lock()
+
   for t.Read() != 93 {
     t.Right()
   }
+  t.lock.Unlock()
 }
 
 func (t *Tape) Read() byte {
+  t.lock.Lock()
+  defer t.lock.Unlock()
+
   return t.cells[t.index]
 }
 
 func (t *Tape) Write(b byte) {
+  t.lock.Lock()
+  defer t.lock.Unlock()
+
   t.cells[t.index] = b
 }
 
 func (t *Tape) Inc() {
+  t.lock.Lock()
+  defer t.lock.Unlock()
+
   t.cells[t.index]++
 }
 
 func (t *Tape) Dec() {
+  t.lock.Lock()
+  defer t.lock.Unlock()
+
   t.cells[t.index]--
 }
 
 func (t *Tape) GetIndex() uint {
+  t.lock.Lock()
+  defer t.lock.Unlock()
+
   return t.index
 }
 
 func (t *Tape) GetCells() []byte {
+  t.lock.Lock()
+  defer t.lock.Unlock()
+
   return t.cells
 }
