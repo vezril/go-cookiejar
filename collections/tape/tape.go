@@ -7,10 +7,11 @@ import (
 const blockSize = 32
 
 type Tape struct {
-	size		uint
-	lock		sync.Mutex
-	cells		[]byte
-	index		uint
+	size		 uint
+	lock		 sync.Mutex
+	cells		  []byte
+	index		  uint
+  totalOps  uint
 }
 
 func New() *Tape {
@@ -18,6 +19,7 @@ func New() *Tape {
   t.size = blockSize
 	t.lock = sync.Mutex{}
 	t.cells = make([]byte, blockSize)
+  t.totalOps = 0
 
 	return t
 }
@@ -50,6 +52,7 @@ func (t *Tape) Left() {
     t.cells = newCells
   }
   t.index--
+  t.totalOps++
 }
 
 // Doesn't validate bounds yet
@@ -61,26 +64,33 @@ func (t *Tape) Sync(index uint) {
 }
 
 func (t *Tape) SyncToOpening() {
-  t.lock.Lock()
-
-  for t.Read() != 91 {
+  var count uint
+  for {
     t.Left()
+    token := t.Read()
+    if token == 93 {
+      count++
+    } else if token == 91 {
+      if count == 0 {
+        break
+      } else {
+        count--
+      }
+    }
   }
-  t.lock.Unlock()
+  t.Left()
 }
 
 func (t *Tape) SyncToClosing() {
-  t.lock.Lock()
-
   for t.Read() != 93 {
     t.Right()
   }
-  t.lock.Unlock()
 }
 
 func (t *Tape) Read() byte {
   t.lock.Lock()
   defer t.lock.Unlock()
+  t.totalOps++
 
   return t.cells[t.index]
 }
@@ -88,6 +98,7 @@ func (t *Tape) Read() byte {
 func (t *Tape) Write(b byte) {
   t.lock.Lock()
   defer t.lock.Unlock()
+  t.totalOps++
 
   t.cells[t.index] = b
 }
@@ -95,6 +106,7 @@ func (t *Tape) Write(b byte) {
 func (t *Tape) Inc() {
   t.lock.Lock()
   defer t.lock.Unlock()
+  t.totalOps++
 
   t.cells[t.index]++
 }
@@ -102,6 +114,7 @@ func (t *Tape) Inc() {
 func (t *Tape) Dec() {
   t.lock.Lock()
   defer t.lock.Unlock()
+  t.totalOps++
 
   t.cells[t.index]--
 }
