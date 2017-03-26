@@ -118,8 +118,10 @@ func (s *Stack) Size() int {
 
 // Resets the stack, effectively clearing its contents.
 func (s *Stack) Reset() {
-    s.lock.Lock()
-    defer s.lock.Unlock()
+    // Keep reference of mutex before destroying everything
+    l := s.lock
+    l.Lock()
+    defer l.Unlock()
 
     *s = *New()
 }
